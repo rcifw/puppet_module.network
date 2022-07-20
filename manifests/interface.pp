@@ -420,6 +420,7 @@ define network::interface (
   $ipv6addr              = undef,
   $ipv6addr_secondaries  = [],
   $ipv6_defaultgw        = undef,
+  $ipv6_failure_fatal    = undef,
   $dhcp_hostname         = undef,
   $srcaddr               = undef,
   $peerdns               = '',

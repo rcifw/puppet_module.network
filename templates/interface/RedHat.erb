@@ -124,6 +124,11 @@ IPV6ADDR_SECONDARIES="<%= @ipv6addr_secondaries.sort.join(' ') %>"
 <% if @ipv6_defaultgw -%>
 IPV6_DEFAULTGW="<%= @ipv6_defaultgw %>"
 <% end -%>
+<% if @ipv6init and @ipv6_failure_fatal -%>
+<% if @ipv6init == true and @ipv6_failure_fatal == true -%>
+IPV6_FAILURE_FATAL=yes
+<% end -%>
+<% end -%>
 <% if @dhcp_hostname -%>
 DHCP_HOSTNAME="<%= @dhcp_hostname %>"
 <% end -%>
