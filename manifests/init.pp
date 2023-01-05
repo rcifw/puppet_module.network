@@ -207,11 +207,11 @@ class network (
   }
 
   $manage_config_file_notify  = $config_file_notify ? {
-    'class_default' => "Exec[${service_restart_exec}]",
+    'class_default' => "Exec[network_restart]",
     'undef'         => undef,
     ''              => undef,
     undef           => undef,
-    true            => "Exec[${service_restart_exec}]",
+    true            => "Exec[network_restart]",
     false           => undef,
     default         => $config_file_notify,
   }
