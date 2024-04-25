@@ -73,23 +73,21 @@
 #
 define network::conf (
 
-  $source       = undef,
-  $template     = undef,
-  $content      = undef,
+  Optional[String] $source                                = undef,
+  Optional[String] $template                              = undef,
+  Optional[String] $content                               = undef,
 
-  $path         = undef,
-  $mode         = undef,
-  $owner        = undef,
-  $group        = undef,
+  Optional[String] $path                                  = undef,
+  Optional[String] $mode                                  = undef,
+  Optional[String] $owner                                 = undef,
+  Optional[String] $group                                 = undef,
 
-  $config_file_notify  = 'class_default',
-  $config_file_require = undef,
+  String                             $config_file_notify  = 'class_default',
+  Optional[Variant[String, Boolean]] $config_file_require = undef,
 
-  $options_hash = undef,
+  Optional[Hash]                     $options_hash        = undef,
 
-  $ensure       = present ) {
-
-  validate_re($ensure, ['present','absent'], 'Valid values are: present, absent. WARNING: If set to absent the conf file is removed.')
+  Enum['present','absent'] $ensure                        = present ) {
 
   include ::network
 

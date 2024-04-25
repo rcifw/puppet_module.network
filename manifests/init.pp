@@ -82,67 +82,67 @@
 #
 class network (
 
-  $hostname                  = undef,
+  Optional[String] $hostname                  = undef,
 
-  $interfaces_hash           = undef,
-  $default_interfaces_hash   = {},
-  $routes_hash               = undef,
-  $mroutes_hash              = undef,
-  $rules_hash                = undef,
-  $tables_hash               = undef,
-  $confs_hash                = undef,
+  Optional[Hash] $interfaces_hash           = undef,
+  Optional[Hash] $default_interfaces_hash   = {},
+  Optional[Hash] $routes_hash               = undef,
+  Optional[Hash] $mroutes_hash              = undef,
+  Optional[Hash] $rules_hash                = undef,
+  Optional[Hash] $tables_hash               = undef,
+  Optional[Hash] $confs_hash                = undef,
 
-  $hostname_file_template   = "network/hostname-${::osfamily}.erb",
+  String $hostname_file_template   = "network/hostname-${::osfamily}.erb",
 
   # Parameter used only on RedHat family
-  $gateway                   = undef,
+  Optional[String] $gateway                   = undef,
   $nozeroconf                = undef,
-  $ipv6enable                = undef,
-  $networking_ipv6           = undef,
-  $ipv6forwarding            = undef,
-  $ipv6_autoconf             = undef,
-  $ipv6_autotunnel           = undef,
-  $ipv6_defaultgw            = undef,
-  $ipv6_radvd_pidfile        = undef,
+  Optional[Enum['yes', 'no']] $ipv6enable                = undef,
+  Optional[Enum['yes', 'no']] $networking_ipv6           = undef,
+  Optional[Enum['yes', 'no']] $ipv6forwarding            = undef,
+  Optional[Enum['yes', 'no']] $ipv6_autoconf             = undef,
+  Optional[Enum['yes', 'no']] $ipv6_autotunnel           = undef,
+  Optional[String] $ipv6_defaultgw            = undef,
+  Optional[Stdlib::Absolutepath] $ipv6_radvd_pidfile        = undef,
 
   # Stdmod commons
-  $package_name              = $::network::params::package_name,
-  $package_ensure            = 'present',
+  Optional[String] $package_name              = $::network::params::package_name,
+  String $package_ensure            = 'present',
 
-  $service_restart_exec      = $::network::params::service_restart_exec,
+  String $service_restart_exec      = $::network::params::service_restart_exec,
 
-  $config_file_path          = $::network::params::config_file_path,
-  $config_file_require       = undef,
-  $config_file_notify        = 'class_default',
-  $config_file_source        = undef,
-  $config_file_template      = undef,
-  $config_file_content       = undef,
-  $config_file_options_hash  = { } ,
+  Optional[Stdlib::Absolutepath] $config_file_path          = $::network::params::config_file_path,
+  Optional[Variant[String, Boolean]] $config_file_require       = undef,
+  Optional[Variant[String, Boolean]] $config_file_notify        = 'class_default',
+  Optional[String] $config_file_source        = undef,
+  Optional[String] $config_file_template      = undef,
+  Optional[String] $config_file_content       = undef,
+  Hash $config_file_options_hash  = { } ,
 
-  $config_file_per_interface = false,
+  Boolean $config_file_per_interface = false,
 
-  $config_dir_path           = $::network::params::config_dir_path,
-  $config_dir_source         = undef,
-  $config_dir_purge          = false,
-  $config_dir_recurse        = true,
+  Optional[Stdlib::Absolutepath] $config_dir_path           = $::network::params::config_dir_path,
+  Optional[String] $config_dir_source         = undef,
+  Boolean $config_dir_purge          = false,
+  Boolean $config_dir_recurse        = true,
 
-  $dependency_class          = undef,
-  $my_class                  = undef,
+  Optional[String] $dependency_class          = undef,
+  Optional[String] $my_class                  = undef,
 
-  $monitor_class             = undef,
-  $monitor_options_hash      = { } ,
+  Optional[String] $monitor_class             = undef,
+  Hash $monitor_options_hash      = { } ,
 
-  $firewall_class            = undef,
-  $firewall_options_hash     = { } ,
+  Optional[String] $firewall_class            = undef,
+  Hash $firewall_options_hash     = { } ,
 
-  $scope_hash_filter         = '(uptime.*|timestamp)',
+  Optional[String] $scope_hash_filter         = '(uptime.*|timestamp)',
 
-  $tcp_port                  = undef,
-  $udp_port                  = undef,
+  Optional[Stdlib::Port] $tcp_port                  = undef,
+  Optional[Stdlib::Port] $udp_port                  = undef,
 
-  $hiera_merge               = false,
+  Boolean $hiera_merge               = false,
 
-  $vlan                      = undef,
+  Optional[Integer] $vlan                      = undef,
 
   ) inherits ::network::params {
 

@@ -1,6 +1,10 @@
 fixtures:
+  forge_modules:
+    host_core:
+      flags: --module_repository=https://repo.icts.kuleuven.be/artifactory/api/puppet/puppet
+      repo: puppetlabs/host_core
   repositories:
-    stdlib: "git://github.com/puppetlabs/puppetlabs-stdlib.git"
-    concat: "git://github.com/puppetlabs/puppetlabs-concat.git"
+    stdlib: "https://github.com/puppetlabs/puppetlabs-stdlib.git"
+    concat: "https://github.com/puppetlabs/puppetlabs-concat.git"
   symlinks:
     network: "#{source_dir}"

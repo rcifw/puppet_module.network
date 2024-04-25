@@ -270,24 +270,24 @@
 #
 define network::interface (
 
-  $enable                = true,
-  $ensure                = 'present',
-  $template              = "network/interface/${::osfamily}.erb",
-  $options               = undef,
-  $options_extra_redhat  = undef,
-  $options_extra_debian  = undef,
-  $options_extra_suse    = undef,
-  $interface             = $name,
-  $restart_all_nic = $::osfamily ? {
+  Boolean $enable                = true,
+  Enum['present','absent'] $ensure                = 'present',
+  String $template              = "network/interface/${::osfamily}.erb",
+  Optional[Hash] $options               = undef,
+  Optional[Hash] $options_extra_redhat  = undef,
+  Optional[Hash] $options_extra_debian  = undef,
+  Optional[Hash] $options_extra_suse    = undef,
+  String $interface             = $name,
+  Boolean $restart_all_nic = $::osfamily ? {
     'RedHat' => $::operatingsystemmajrelease ? {
       '8'     => false,
       default => true,
     },
     default  => true,
   },
-  $reload_command        = undef,
+  Optional[String] $reload_command        = undef,
 
-  $enable_dhcp           = false,
+  Boolean $enable_dhcp           = false,
 
   $ipaddress             = '',
   $netmask               = undef,
@@ -302,7 +302,7 @@ define network::interface (
 
   ## Debian specific
   $manage_order          = '10',
-  $auto                  = true,
+  Boolean $auto                  = true,
   $allow_hotplug         = undef,
   $method                = '',
   $family                = 'inet',
@@ -345,22 +345,22 @@ define network::interface (
 
   # Convenience shortcuts
   $nonlocal_gateway      = undef,
-  $additional_networks   = [ ],
+  Array $additional_networks   = [ ],
 
   # Common ifupdown scripts
-  $up                    = [ ],
-  $pre_up                = [ ],
-  $post_up               = [ ],
-  $down                  = [ ],
-  $pre_down              = [ ],
-  $post_down             = [ ],
+  Array $up                    = [ ],
+  Array $pre_up                = [ ],
+  Array $post_up               = [ ],
+  Array $down                  = [ ],
+  Array $pre_down              = [ ],
+  Array $post_down             = [ ],
 
   # For virtual routing and forwarding (VRF)
   $vrf                   = undef,
   $vrf_table             = undef,
 
   # For bonding
-  $slaves                = [ ],
+  Array $slaves                = [ ],
   $bond_mode             = undef,
   $bond_miimon           = undef,
   $bond_downdelay        = undef,
@@ -368,7 +368,7 @@ define network::interface (
   $bond_lacp_rate        = undef,
   $bond_master           = undef,
   $bond_primary          = undef,
-  $bond_slaves           = [ ],
+  Array $bond_slaves           = [ ],
   $bond_xmit_hash_policy = undef,
   $bond_num_grat_arp     = undef,
   $bond_arp_all          = undef,
@@ -385,7 +385,7 @@ define network::interface (
   $team_master           = undef,
 
   # For bridging
-  $bridge_ports          = [ ],
+  Array $bridge_ports          = [ ],
   $bridge_stp            = undef,
   $bridge_fd             = undef,
   $bridge_maxwait        = undef,
@@ -395,11 +395,11 @@ define network::interface (
   $wpa_ssid              = undef,
   $wpa_bssid             = undef,
   $wpa_psk               = undef,
-  $wpa_key_mgmt          = [ ],
-  $wpa_group             = [ ],
-  $wpa_pairwise          = [ ],
-  $wpa_auth_alg          = [ ],
-  $wpa_proto             = [ ],
+  Array $wpa_key_mgmt          = [ ],
+  Array $wpa_group             = [ ],
+  Array $wpa_pairwise          = [ ],
+  Array $wpa_auth_alg          = [ ],
+  Array $wpa_proto             = [ ],
   $wpa_identity          = undef,
   $wpa_password          = undef,
   $wpa_scan_ssid         = undef,
@@ -443,16 +443,16 @@ define network::interface (
   $vid                   = undef,
   $physdev               = undef,
   $bridge                = undef,
-  $arpcheck              = undef,
+  Optional[Enum['yes', 'no']] $arpcheck              = undef,
   $zone                  = undef,
-  $arp                   = undef,
-  $nozeroconf            = undef,
+  Optional[Enum['yes', 'no']] $arp                   = undef,
+  Optional[Enum['yes', 'no']] $nozeroconf            = undef,
   $linkdelay             = undef,
   $check_link_down       = false,
   $hotplug               = undef,
   $persistent_dhclient   = undef,
   $nm_name               = undef,
-  $iprule                = undef,
+  Optional[Array] $iprule                = undef,
 
   # RedHat specific for InfiniBand
   $connected_mode        = undef,
@@ -480,10 +480,10 @@ define network::interface (
   $ovsbootproto          = undef,
 
   # RedHat specific for zLinux
-  $subchannels           = undef,
-  $nettype               = undef,
-  $layer2                = undef,
-  $zlinux_options        = undef,
+  Optional[Array] $subchannels           = undef,
+  Optional[Enum['qeth', 'lcs', 'ctc']] $nettype               = undef,
+  Optional[Enum['0', '1']] $layer2                = undef,
+  Optional[String] $zlinux_options        = undef,
 
   ## Suse specific
   $startmode             = '',
@@ -491,8 +491,8 @@ define network::interface (
   $firewall              = undef,
   $aliases               = undef,
   $remote_ipaddr         = undef,
-  $check_duplicate_ip    = undef,
-  $send_gratuitous_arp   = undef,
+  Optional[Enum['yes', 'no']] $check_duplicate_ip    = undef,
+  Optional[Enum['yes', 'no']] $send_gratuitous_arp   = undef,
   $pre_up_script         = undef,
   $post_up_script        = undef,
   $pre_down_script       = undef,
@@ -513,60 +513,6 @@ define network::interface (
   ) {
 
   include ::network
-
-  validate_re($ensure, '^(present|absent)$', "Ensure can only be present or absent (to add or remove an interface). Current value: ${ensure}")
-  validate_bool($auto)
-  validate_bool($enable)
-  validate_bool($restart_all_nic)
-
-  validate_array($up)
-  validate_array($pre_up)
-  validate_array($down)
-  validate_array($pre_down)
-  validate_array($slaves)
-  validate_array($bond_slaves)
-  validate_array($bridge_ports)
-  validate_array($wpa_key_mgmt)
-  validate_array($wpa_group)
-  validate_array($wpa_pairwise)
-  validate_array($wpa_auth_alg)
-  validate_array($wpa_proto)
-
-  # $subchannels is only valid for zLinux/SystemZ/s390x.
-  if $::architecture == 's390x' {
-    validate_array($subchannels)
-    validate_re($nettype, '^(qeth|lcs|ctc)$', "${name}::\$nettype may be 'qeth', 'lcs' or 'ctc' only and is set to <${nettype}>.")
-    # Different parameters required for RHEL6 and RHEL7
-    if $::operatingsystemmajrelease =~ /^7|^8/ {
-      validate_string($zlinux_options)
-    } else {
-      validate_re($layer2, '^0|1$', "${name}::\$layer2 must be 1 or 0 and is to <${layer2}>.")
-    }
-  }
-  if $::osfamily == 'RedHat' {
-    if $iprule != undef {
-      validate_array($iprule)
-    }
-  }
-  if $arp != undef and ! ($arp in ['yes', 'no']) {
-    fail('arp must be one of: undef, yes, no')
-  }
-
-  if $arpcheck != undef and ! ($arpcheck in ['yes', 'no']) {
-    fail('arpcheck must be one of: undef, yes, no')
-  }
-
-  if $nozeroconf != undef and ! ($nozeroconf in ['yes', 'no']) {
-    fail('nozeroconf must be one of: undef, yes, no')
-  }
-
-  if $check_duplicate_ip != undef and ! ($check_duplicate_ip in ['yes', 'no']) {
-    fail('check_duplicate_ip must be one of: undef, yes, no')
-  }
-
-  if $send_gratuitous_arp != undef and ! ($send_gratuitous_arp in ['yes', 'no']) {
-    fail('send_gratuitous_arp must be one of: undef, yes, no')
-  }
 
   if $::osfamily != 'RedHat' and ($type == 'InfiniBand' or $connected_mode) {
     fail('InfiniBand parameters are supported only for RedHat family.')

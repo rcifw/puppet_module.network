@@ -126,7 +126,8 @@ describe 'network' do
       }}
 
       it {
-        is_expected.to contain_file('network.conf').with_notify("Exec[service network restart]")
+        is_expected.to contain_file('network.conf').with_notify("Exec[network_restart]")
+        is_expected.to contain_exec('network_restart').with_command("service network restart")
       }
 
     end
@@ -147,7 +148,8 @@ describe 'network' do
       }}
 
       it {
-        is_expected.to contain_file('network.conf').with_notify("Exec[/sbin/ifdown -a --force ; /sbin/ifup -a]")
+        is_expected.to contain_file('network.conf').with_notify("Exec[network_restart]")
+        is_expected.to contain_exec('network_restart').with_command("/sbin/ifdown -a --force ; /sbin/ifup -a")
       }
 
     end

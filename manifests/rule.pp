@@ -26,18 +26,11 @@
 #
 
 define network::rule (
-  $iprule,
-  $interface = $name,
-  $family    = [],
-  $ensure    = 'present'
+  Array[String] $iprule,
+  String $interface = $name,
+  Optional[Array] $family    = [],
+  Enum['present','absent'] $ensure    = 'present'
 ) {
-  # Validate our arrays
-  validate_array($iprule)
-
-  if $family {
-    validate_array($family)
-  }
-
   include ::network
 
   case $::osfamily {
