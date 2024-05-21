@@ -147,7 +147,7 @@ Same information as Hiera data in yaml format:
 
         network::interface { 'eth0':
           enable_dhcp => true,
-          template    => "site/network/interface/${::osfamily}.erb",
+          template    => "site/network/interface/${facts['os']['family']}.erb",
         }
 
 ## Network routes management examples

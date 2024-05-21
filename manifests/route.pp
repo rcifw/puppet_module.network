@@ -125,7 +125,7 @@ define network::route (
 
   include ::network
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat': {
       file { "route-${name}":
         ensure  => $ensure,

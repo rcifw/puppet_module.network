@@ -33,7 +33,7 @@ define network::rule (
 ) {
   include ::network
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat': {
       file { "rule-${interface}":
         ensure  => present,
